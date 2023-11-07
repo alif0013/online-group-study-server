@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
         //creat databse file name
         const asignmentsCollection = client.db('asignmentDB').collection('asignments');
+        const myAsignmentsCollection = client.db('asignmentDB').collection('myAsignments');
 
 
 
@@ -38,19 +39,19 @@ async function run() {
             res.send(result)
         })
 
-          // find a single data 
-          app.get('/asignments/:id', async (req, res) => {
+        // find a single data 
+        app.get('/asignments/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await asignmentsCollection.findOne(query)
             res.send(result)
         })
 
-        
 
 
 
-    
+
+
 
         // Add product store to the database
         app.post('/asignments', async (req, res) => {
@@ -61,9 +62,9 @@ async function run() {
         })
 
 
-         // updated a document 
+        // updated a document 
 
-         app.put("/asignments/:id", async (req, res) => {
+        app.put("/asignments/:id", async (req, res) => {
             const id = req.params.id;
             const updatedAsignment = req.body;
             // console.log("id", id, updatedProduct);
@@ -91,14 +92,31 @@ async function run() {
             res.send(result);
         });
 
+        //handle my asignment data 
 
+        // get data to the database
+        app.get('/myAsignments', async (req, res) => {
+            // console.log(req.query.email);
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+            const result = await myAsignmentsCollection.find(query).toArray();
+            res.send(result);
+        })
 
+        app.post('/myAsignments', async (req, res) => {
+            const myAsignments = req.body;
+            console.log(myAsignments);
+            const result = await myAsignmentsCollection.insertOne(myAsignments)
+            res.send(result)
+        })
 
-         // delet a asignment by delete operation
-         app.delete('/asignments/:id', async (req, res) =>{
+        // delet a asignment by delete operation
+        app.delete('/asignments/:id', async (req, res) => {
             const id = req.params.id;
             // console.log(`Deleting item with ID: ${id}`);
-            const query = { _id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             // const query = {_id: id}
             const result = await asignmentsCollection.deleteOne(query)
             res.send(result)
