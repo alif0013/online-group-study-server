@@ -61,6 +61,39 @@ async function run() {
         })
 
 
+         // updated a document 
+
+         app.put("/asignments/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedAsignment = req.body;
+            // console.log("id", id, updatedProduct);
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            // title, description,email, marks, due, level, photo
+
+            const product = {
+                $set: {
+
+                    title: updatedAsignment.title,
+                    description: updatedAsignment.description,
+                    email: updatedAsignment.email,
+                    marks: updatedAsignment.marks,
+                    due: updatedAsignment.due,
+                    level: updatedAsignment.level,
+                    photo: updatedAsignment.photo
+                },
+            };
+            const result = await asignmentsCollection.updateOne(
+                filter,
+                product,
+                options
+            );
+            res.send(result);
+        });
+
+
+
+
          // delet a asignment by delete operation
          app.delete('/asignments/:id', async (req, res) =>{
             const id = req.params.id;
