@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = process.env.PORT || 5000;
 
@@ -38,6 +38,19 @@ async function run() {
             res.send(result)
         })
 
+          // find a single data 
+          app.get('/asignments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await asignmentsCollection.findOne(query)
+            res.send(result)
+        })
+
+        
+
+
+
+    
 
         // Add product store to the database
         app.post('/asignments', async (req, res) => {
