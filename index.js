@@ -61,7 +61,15 @@ async function run() {
         })
 
 
-
+         // delet a asignment by delete operation
+         app.delete('/asignments/:id', async (req, res) =>{
+            const id = req.params.id;
+            // console.log(`Deleting item with ID: ${id}`);
+            const query = { _id: new ObjectId(id)}
+            // const query = {_id: id}
+            const result = await asignmentsCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
