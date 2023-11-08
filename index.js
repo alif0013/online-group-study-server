@@ -29,11 +29,12 @@ async function run() {
         //creat databse file name
         const asignmentsCollection = client.db('asignmentDB').collection('asignments');
         const myAsignmentsCollection = client.db('asignmentDB').collection('myAsignments');
+        const submitAsignmentsCollection = client.db('asignmentDB').collection('submitAsignment');
 
 
 
 
-        // get products data to the database
+        // get asignment data to the database
         app.get('/asignments', async (req, res) => {
             const result = await asignmentsCollection.find().toArray();
             res.send(result)
@@ -94,7 +95,8 @@ async function run() {
 
         //handle my asignment data 
 
-        // get data to the database
+       
+        // get data to the database by email basis
         app.get('/myAsignments', async (req, res) => {
             // console.log(req.query.email);
             let query = {};
@@ -105,12 +107,49 @@ async function run() {
             res.send(result);
         })
 
+        
+
         app.post('/myAsignments', async (req, res) => {
             const myAsignments = req.body;
             console.log(myAsignments);
             const result = await myAsignmentsCollection.insertOne(myAsignments)
             res.send(result)
         })
+
+
+
+        //handle submit asignment data 
+
+        //  get submit asignment data to the database
+         app.get('/submitAsignment', async (req, res) => {
+            const result = await submitAsignmentsCollection.find().toArray();
+            res.send(result)
+        })
+
+        //get single data
+        app.get('/submitAsignment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await submitAsignmentsCollection.findOne(query)
+            res.send(result)
+        })
+
+
+        app.post('/submitAsignment', async (req, res) => {
+            const submitAsignment = req.body;
+            // console.log(submitAsignment);
+            const result = await submitAsignmentsCollection.insertOne(submitAsignment)
+            res.send(result)
+        })
+
+
+
+
+
+
+
+
+
 
         // delet a asignment by delete operation
         app.delete('/asignments/:id', async (req, res) => {
